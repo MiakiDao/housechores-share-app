@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->integer('price_cents')->unsigned()->default(0);
+            $table->boolean('is_favorite')->default(false);
+            $table->string('img_path');
             $table->timestamps();
         });
     }
