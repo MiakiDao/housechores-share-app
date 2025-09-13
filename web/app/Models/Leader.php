@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Leader extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\LeaderFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -17,8 +17,6 @@ class Leader extends Authenticatable
      *
      * @var list<string>
      */
-
-    protected $table = 'leaders';
     
     protected $fillable = [
         'name',
@@ -26,21 +24,36 @@ class Leader extends Authenticatable
         'password',
     ];
 
+
+    // membersに対するリレーションhasMany
+    public function members()
+    {
+        return $this->hasMany(Menmber::class);
+    }
+
+
+
+
+
+
+
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    // ログイン状態を維持する機能に使うらしい
+    // protected $hidden = [
+    //     'password',
+    //     'remember_token',
+    // ];
 
     /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
      */
+    // ユーザー登録やパスワード変更のときに、自動でハッシュ化してくれる（ログイン機能つけるなら残す）
     protected function casts(): array
     {
         return [
