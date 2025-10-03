@@ -50,12 +50,10 @@ choreBtns.forEach(function(choreBtn) {
 // 確認モーダル: 追加
 confirmAddBtn.addEventListener('click', () => {
 
-// selectedChoreをわざわざ仲介させる必要あるかな？
-
   // ID/名前を取得(各家事アイテムのdata属性に設定してある)
   const choreId = selectedChore.dataset.choreId;
   const choreName = selectedChore.dataset.name;
-  const chorePriceCent = selectedChore.dataset.priceCents;
+  const chorePriceCent = Number(selectedChore.dataset.priceCents);
   const choreImgPath = selectedChore.dataset.imgPath;
 
   // 重複チェック（既に追加済みなら閉じるだけ）
@@ -80,7 +78,7 @@ img.classList.add('w-20', 'h-20', 'object-contain');
 
 // 価格タグ
 const priceSpan = document.createElement('span');
-const priceYen = Number(chorePriceCent) / 100;
+const priceYen = chorePriceCent / 100;
 priceSpan.textContent = `${priceYen.toLocaleString()}円`;
 priceSpan.classList.add('text-lg', 'font-bold', 'text-center', 'text-gray-500');
 
@@ -145,17 +143,24 @@ assignCloseBtn.onclick = function() {
 }
 
 function addChorePrice(memberId, price) {
-  const balanceEl = document.getElementById('balance-${memberId}');
+  const balanceEl = document.getElementById(`balance-${memberId}`);
 
   //　datasetから元の値を取得（明示的に１０進数）
   let currentBalance = parseInt(balanceEl.dataset.balance, 10);
+
+  currentBalance += price;
+
+  // dataset と 表示を更新
+  balanceEl.dataset.balance = currentBalance;
+  balanceEl.textContent = `所持金: ${(currentBalance / 100).toLocaleString()}円`;
 }
 
 assignMemberBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    if (!assigningChore || !pendingChoreEl) return; // 念のため
+    if (!assigningChore || !pendingChoreEl) return;
 
     // 受け皿を作成して、追加
+    const memberId = btn.dataset.memberId;
     const memberChoresList = document.getElementById(`member-chores-${btn.dataset.memberId}`);
     memberChoresList.classList.add('flex','flex-wrap','gap-2');
 
@@ -170,10 +175,12 @@ assignMemberBtns.forEach((btn) => {
     li.appendChild(img);
     memberChoresList.appendChild(li);
 
-    //li要素を押下したときのイベント
+    const chorePrice = assigningChore.priceCents;
+    //li要素を押下したときのイベント（chorePriceCentをメンバーのbalanceCentに加算）
     li.addEventListener('click', () => {
-
-    })
+      addChorePrice(memberId, chorePrice);
+      li.classList.add('opacity-50');
+    }, { once: true });
 
     // 元の「今日の家事」の li を非表示
     pendingChoreEl.classList.add('hidden', 'opacity-50');
