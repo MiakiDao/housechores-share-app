@@ -144,11 +144,18 @@ assignCloseBtn.onclick = function() {
     assignModal.classList.add('hidden');
 }
 
+function addChorePrice(memberId, price) {
+  const balanceEl = document.getElementById('balance-${memberId}');
+
+  //　datasetから元の値を取得（明示的に１０進数）
+  let currentBalance = parseInt(balanceEl.dataset.balance, 10);
+}
+
 assignMemberBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     if (!assigningChore || !pendingChoreEl) return; // 念のため
 
-    // 受け皿に追加
+    // 受け皿を作成して、追加
     const memberChoresList = document.getElementById(`member-chores-${btn.dataset.memberId}`);
     memberChoresList.classList.add('flex','flex-wrap','gap-2');
 
@@ -161,10 +168,14 @@ assignMemberBtns.forEach((btn) => {
     img.classList.add('w-14','h-14','object-contain');
 
     li.appendChild(img);
-memberChoresList.appendChild(li);
+    memberChoresList.appendChild(li);
+
+    //li要素を押下したときのイベント
+    li.addEventListener('click', () => {
+
+    })
 
     // 元の「今日の家事」の li を非表示
-    // 非表示にするなら：
     pendingChoreEl.classList.add('hidden', 'opacity-50');
 
     // 後処理

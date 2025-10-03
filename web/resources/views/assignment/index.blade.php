@@ -23,7 +23,7 @@
     <div class="flex p-4 border rounded shadow">
         <div>
             <h2 class="text-md font-bold">{{ $member->name }}</h2>
-            <span>所持金: {{ $member->balance_cents }}円</span>
+            <span id="balance-{{ $member->$id }}" data-balance="{{ $member->balance_cents }}">所持金: {{ $member->balance_cents }}円</span>
         </div>
         <ul id="member-chores-{{ $member->id }}"></ul>
     </div>
